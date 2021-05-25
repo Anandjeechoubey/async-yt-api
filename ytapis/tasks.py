@@ -4,6 +4,9 @@ from celery import shared_task
 from .models import Video
 import requests
 import json
+from assignment import settings
+
+from datetime import datetime, timedelta
 
 @shared_task
 def add(x, y):
@@ -11,28 +14,39 @@ def add(x, y):
 
 @shared_task
 def call_api():
+    time_now = datetime.now()
+    last_request_time = time_now - timedelta(seconds=10)
+    apiKeys = settings.YT_API_KEYS
     URL = "https://youtube.googleapis.com/youtube/v3/search"
     PARAMS = {
-        'q': 'football',
-        'maxResults': 1,
-        'key': 'AIzaSyDdj2MdQo-VVaiVH7cYXWD5E5o9_LOCuHs',
+        'q': 'news',
+        'maxResults': 10,
+        'key': apiKeys,
         'order': 'date',
         'type': 'video',
-        'part': 'snippet'
+        'part': 'snippet',
+        'publishedAfter': last_request_time.replace(microsecond=0).isoformat()+'Z',
     }
     r = requests.get(url = URL, params = PARAMS)
     data = r.json()
     json_data = json.loads(r.text)
-    for item in json_data['items']:
+    for item in reversed(json_data['items']):
+        title = item['snippet']['title'],
+        description = item['snippet']['description'],
+        published = item['snippet']['publishedAt'],
+        thumbnail = item['snippet']['thumbnails']['default']['url']
+
+        # print(title, description, published, thumbnail)
+
         video = Video(
-            title = item['snippet']['title'],
-            description = item['snippet']['description'],
-            published = item['snippet']['publishedAt'],
-            thumbnail = item['snippet']['thumbnails']['default']['url']
+            title=title[0],
+            description=description[0],
+            published=published[0],
+            thumbnail=thumbnail,
         )
         video.save()
         
-    print(json_data)
+    # print(json_data)
 
 @shared_task
 def test():

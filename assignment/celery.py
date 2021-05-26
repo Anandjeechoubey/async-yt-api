@@ -10,9 +10,9 @@ app = Celery('assignment')
 # pickle the object when using Windows.
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.beat_schedule = {
-    'every-10-second':{
+    'every-5-minutes':{
         'task': 'ytapis.tasks.call_api',
-        'schedule': 10,
+        'schedule': 300,
     }
 }
 app.autodiscover_tasks()

@@ -15,7 +15,7 @@ def add(x, y):
 @shared_task
 def call_api():
     time_now = datetime.now()
-    last_request_time = time_now - timedelta(seconds=10)
+    last_request_time = time_now - timedelta(minutes=5)
     apiKeys = settings.YT_API_KEYS
     URL = "https://youtube.googleapis.com/youtube/v3/search"
     PARAMS = {
@@ -46,7 +46,7 @@ def call_api():
         )
         video.save()
         
-    # print(json_data)
+    #print(json_data)
 
 @shared_task
 def test():

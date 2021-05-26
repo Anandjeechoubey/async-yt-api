@@ -1,0 +1,61 @@
+version: "3"
+
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    hostname: rabbitmq
+    image: rabbitmq:latest
+    networks:
+      - main
+    ports:
+      - "5672:5672"
+    restart: on-failure
+  django:
+    build: .
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    container_name: assignment
+    volumes:
+      - .:/assignment
+    ports:
+      - "8000:8000"
+    hostname: localhost
+    image: django-image
+    networks:
+      - main
+    restart: on-failure
+  celery_worker:
+    command: sh -c "celery -A assignment worker -l info"
+    container_name: celery_worker
+    depends_on:
+      - django
+      - rabbitmq
+    # deploy:
+    #   replicas: 2
+    #   restart_policy:
+    #   condition: on-failure
+    #   resources:
+    #   limits:
+    #     cpus: "0.50"
+    #     memory: 50M
+    #   reservations:
+    #     cpus: "0.25"
+    #     memory: 20M
+    hostname: localhost
+    image: django-image
+    networks:
+      - main
+    restart: on-failure
+  celery_beat:
+    command: sh -c "celery -A assignment beat -l info"
+    container_name: celery_beat
+    depends_on:
+      - django
+      - rabbitmq
+    hostname: localhost
+    image: django-image
+    networks:
+      - main
+    restart: on-failure
+
+networks:
+  main:

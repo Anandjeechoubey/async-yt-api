@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-%h-aewuljrj3w80123&7brhk8)08g6!$&a8tsapu)j&xx6j3m#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -131,6 +131,11 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# CELERY_BROKER_URL= 'amqp://guest:**@rabbitmq:5672//'
+# CELERY_RESULT_BACKEND= 'amqp://guest:**@rabbitmq:5672//'
+#CELERY_BROKER_URL = 'amqp://localhost'
+
 
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'

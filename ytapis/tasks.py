@@ -18,17 +18,36 @@ def call_api():
     last_request_time = time_now - timedelta(minutes=5)
     apiKeys = settings.YT_API_KEYS
     URL = "https://youtube.googleapis.com/youtube/v3/search"
-    PARAMS = {
-        'q': 'news',
-        'maxResults': 10,
-        'key': apiKeys,
-        'order': 'date',
-        'type': 'video',
-        'part': 'snippet',
-        'publishedAfter': last_request_time.replace(microsecond=0).isoformat()+'Z',
-    }
+    # PARAMS = {
+    #     'q': 'news',
+    #     'maxResults': 10,
+    #     'key': apiKeys,
+    #     'order': 'date',
+    #     'type': 'video',
+    #     'part': 'snippet',
+    #     'publishedAfter': last_request_time.replace(microsecond=0).isoformat()+'Z',
+    # }
+    valid = False
+    for apiKey in apiKeys:
+        try:
+            PARAMS = {
+                'q': 'news',
+                'maxResults': 10,
+                'key': apiKey,
+                'order': 'date',
+                'type': 'video',
+                'part': 'snippet',
+                'publishedAfter': last_request_time.replace(microsecond=0).isoformat()+'Z',
+            }
+            r = requests.get(url = URL, params = PARAMS)
+            valid = True
+        except:
+            continue
+
+        if valid:
+            break
     r = requests.get(url = URL, params = PARAMS)
-    data = r.json()
+    # data = r.json()
     json_data = json.loads(r.text)
     for item in reversed(json_data['items']):
         title = item['snippet']['title'],

@@ -140,7 +140,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'
 
-YT_API_KEYS = 'AIzaSyDdj2MdQo-VVaiVH7cYXWD5E5o9_LOCuHs'
+YT_API_KEYS = ['AIzaSyDdj2MdQo-VVaiVH7cYXWD5E5o9_LOCuHs', 'AIzaSyDdj2MdQo-VVaiVH7cYXWD5E5o9_LOCuHs', 'AIzaSyDdj2MdQo-VVaiVH7cYXWD5E5o9_LOCuHs',]
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
